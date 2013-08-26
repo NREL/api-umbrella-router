@@ -17,78 +17,36 @@ limit_req_zone $binary_remote_addr zone=api_umbrella_req_addr_zone:5m rate=100r/
 limit_req_status 429;
 
 server {
-  listen 80;
+  listen 80 default_server;
   server_name <%= all_domains.join(" ") %>;
 
-  access_log <%= current_path %>/log/access.log combined;
-  error_log <%= current_path %>/log/error.log;
-
-  # Limit the number of simulaneous connections per IP address to 50.
-  limit_conn api_umbrella_conn_addr_zone 50;
-
-  # After the 100 requests/second rate is reached, allow a sizable burst before
-  # completely terminating requests at this router level. This is so we can
-  # generally rely on API Umbrella Gatekeeper for rate limiting, but still
-  # throttle traffic to the Gatekeeper.
-  limit_req zone=api_umbrella_req_addr_zone burst=100 nodelay;
-
-  keepalive_timeout 30s;
-
-  # Proxy over HTTP 1.1 so keepalive connections to the backend are supported.
-  proxy_http_version 1.1;
-  proxy_set_header Connection "";
-
-  # Default proxy headers.
-  proxy_set_header Host $http_host;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-  # Conditional proxy headers. Don't set these x-forwarded headers if they've
-  # already been set (by the SSL terminator).
-  set $real_scheme $http_x_forwarded_proto;
-  if ($real_scheme = "") {
-    set $real_scheme $scheme; 
-  }
-
-  set $real_port $http_x_forwarded_port;
-  if ($real_port = "") {
-    set $real_port $server_port; 
-  }
-
-  proxy_set_header X-Forwarded-Proto $real_scheme;
-  proxy_set_header X-Forwarded-Port $real_port;
+  include <%= latest_release %>/config/nginx/public_frontend.conf;
 
   location ~* ^/(about|community|doc|docs|images|static|)(/|$) {
     rewrite ^/doc(/|$) /docs/ permanent;
 
     proxy_set_header Host "api.data.gov";
+    proxy_set_header Connection ""; # Proxy over HTTP 1.1 w keepalive.
     proxy_pass http://github_pages_backend;
   }
 
   location ~* ^/(account|admin|admins|assets|contact|favicon\.ico|javascripts|robots.txt|signup)(/|$) {
     proxy_pass http://api_umbrella_web_backend;
   }
-
-  location / {
-    set $x_api_umbrella_uid $request_id;
-    set $router_name "web_router";
-    access_log <%= current_path %>/log/router.log api_umbrella_log;
-
-    proxy_set_header X-Api-Umbrella-UID $request_id;
-    proxy_pass http://api_umbrella_gatekeeper_backend;
-  }
 }
 
 server {
-  listen 50100;
+  listen 80;
+  server_name api.whitehouse.gov;
 
-  access_log <%= current_path %>/log/access.log combined;
-  error_log <%= current_path %>/log/error.log;
+  include <%= latest_release %>/config/nginx/public_frontend.conf;
+}
 
-  set $x_api_umbrella_uid $http_x_api_umbrella_uid;
-  set $router_name "api_router";
-  access_log <%= current_path %>/log/router.log api_umbrella_log;
+server {
+  listen 50100 default_server;
+  server_name <%= all_domains.join(" ") %>;
 
-  keepalive_timeout 5m;
+  include <%= latest_release %>/config/nginx/api_router_frontend.conf;
 
   # Remove the legacy /api/ prefix from all API urls. Now we assume API URLs
   # are all top-level.
@@ -220,6 +178,24 @@ server {
     proxy_set_header Connection "";
 
     proxy_pass http://regulations_apis_backend;
+  }
+}
+
+server {
+  listen 50100;
+  server_name api.whitehouse.gov;
+
+  include <%= latest_release %>/config/nginx/api_router_frontend.conf;
+
+  location / {
+    proxy_set_header Host "api.whitehouse.gov";
+
+    # Enable keep alive connections to the backend servers.
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+
+    proxy_set_header Host $http_host;
+    proxy_pass https://whitehouse_apis_backend;
   }
 }
 

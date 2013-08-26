@@ -1,0 +1,8 @@
+access_log <%= current_path %>/log/access.log combined;
+error_log <%= current_path %>/log/error.log;
+
+set $x_api_umbrella_uid $http_x_api_umbrella_uid;
+set $router_name "api_router";
+access_log <%= current_path %>/log/router.log api_umbrella_log;
+
+keepalive_timeout 5m;
