@@ -179,6 +179,17 @@ server {
 
     proxy_pass http://regulations_apis_backend;
   }
+
+  location ~* ^/TEST/regulations/ {
+    rewrite ^/TEST/regulations(/.*) /api$1 break;
+    proxy_set_header Host "regstest.erulemaking.net";
+
+    # Enable keep alive connections to the backend servers.
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+
+    proxy_pass http://regulations_test_apis_backend;
+  }
 }
 
 server {
