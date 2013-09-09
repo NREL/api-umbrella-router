@@ -1,6 +1,6 @@
 # Set the servers for this stage.
-role :app, "ec2-23-23-57-185.compute-1.amazonaws.com", "ec2-107-20-100-29.compute-1.amazonaws.com"
-role :web, "ec2-23-23-57-185.compute-1.amazonaws.com", "ec2-107-20-100-29.compute-1.amazonaws.com"
+role :app, "web1b.apidatagov.aws", "web2b.apidatagov.aws", "web1.apidatagov.aws", "web2.apidatagov.aws"
+role :web, "web1b.apidatagov.aws", "web2b.apidatagov.aws", "web1.apidatagov.aws", "web2.apidatagov.aws"
 
 # Set the base path for deployment.
 set :deploy_to_base, "/srv"
