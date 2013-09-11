@@ -59,6 +59,10 @@ server {
   }
 
   location / {
+    # Remove the legacy /api/ prefix from all API urls. Now we assume API URLs
+    # are all top-level.
+    rewrite ^/api(/.*) $1 break;
+
     proxy_pass http://api_umbrella_gatekeeper_frontend;
   }
 }
