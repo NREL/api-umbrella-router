@@ -1,0 +1,4 @@
+apiUmbrella:
+  proxy: 
+    port: 50000
+  geoipDataDir: "/opt/geoip-lite/data"
