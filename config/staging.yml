@@ -1,0 +1,10 @@
+apiUmbrella:
+  mongodb: "mongodb://10.0.10.159:27017,10.0.11.105:27017/api_umbrella_staging"
+  elasticsearch:
+    hosts:
+      - host: 10.0.10.159
+        port: 9200
+      - host: 10.0.11.105
+        port: 9200
+  proxy:
+    workers: 4
