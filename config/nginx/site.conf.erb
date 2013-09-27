@@ -25,8 +25,7 @@ server {
 
   include <%= latest_release %>/config/nginx/public_defaults.conf;
 
-  # Route the docs and other static pages to the Rails web app. This may
-  # change, so that's why we're treating it separately.
+  # Route the docs and other static pages to the github pages.
   location ~* ^/(about|community|doc|docs|images|static|)(/|$) {
     rewrite ^/doc(/|$) /docs/ permanent;
 
