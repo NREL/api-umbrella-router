@@ -6,7 +6,8 @@ role :web, "stage-web1.apidatagov.aws", "stage-web2.apidatagov.aws"
 set :deploy_to_base, "/srv"
 
 # Set the accessible web domain for this site.
-set :base_domain, "api.data.gov"
+set :base_domain, "stage-api.data.gov"
+set :base_domain_aliases, ["http://stage-api-2134735892.us-east-1.elb.amazonaws.com"]
 
 # Production-ready deployments should exclude git data.
 set :copy_exclude, [".git"]
