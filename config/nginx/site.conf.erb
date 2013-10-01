@@ -29,13 +29,16 @@ server {
   location ~* ^/(about|community|doc|docs|images|static|)(/|$) {
     rewrite ^/doc(/|$) /docs/ permanent;
 
-    proxy_set_header Host "api.data.gov";
-    proxy_set_header Connection ""; # Proxy over HTTP 1.1 w keepalive.
-    proxy_pass http://github_pages_backend;
+    # FIXME: Temporarily redirecting to static government shutdown page on the
+    # web backend (change back to github after shutdown).
+    proxy_pass http://api_umbrella_web_backend;
+    #proxy_set_header Host "api.data.gov";
+    #proxy_set_header Connection ""; # Proxy over HTTP 1.1 w keepalive.
+    #proxy_pass http://github_pages_backend;
   }
 
   # Route the dynamic portions of the site to the Rails web app.
-  location ~* ^/(account|admin|admins|assets|contact|favicon\.ico|javascripts|robots.txt|signup)(/|$) {
+  location ~* ^/(account|admin|admins|assets|contact|favicon\.ico|javascripts|robots.txt|signup|government_shutdown)(/|$) {
     proxy_pass http://api_umbrella_web_backend;
   }
 
