@@ -1,8 +1,8 @@
 apiUmbrella:
-  mongodb: "mongodb://10.0.10.37:27017,10.0.11.199:27017/api_umbrella_production"
+  mongodb: "mongodb://10.0.10.193:27017,10.0.11.199:27017/api_umbrella_production"
   elasticsearch:
     hosts:
-      - host: "10.0.10.37"
+      - host: "10.0.10.193"
         port: 9200
       - host: "10.0.11.199"
         port: 9200
