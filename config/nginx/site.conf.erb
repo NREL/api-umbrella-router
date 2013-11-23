@@ -32,6 +32,7 @@ server {
   server_name <%= all_domains.join(" ") %>;
 
   include <%= latest_release %>/config/nginx/public_defaults.conf;
+  include <%= latest_release %>/config/nginx/ssl.conf;
 
   # Route the docs and other static pages to the github pages.
   location ~* ^/(about|community|doc|docs|images|static|)(/|$) {
