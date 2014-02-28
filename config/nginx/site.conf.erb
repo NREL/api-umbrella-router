@@ -41,6 +41,9 @@ server {
   location ~* ^/(about|community|doc|docs|images|static|)(/|$) {
     rewrite ^/doc(/|$) /docs/ permanent;
 
+    # Old page redirects.
+    rewrite ^/docs/regulations/(docket-v2|document-v2|documentsearch-v2)(/|$) /docs/regulations/ permanent;
+
     proxy_set_header Host "api.data.gov";
     proxy_set_header Connection ""; # Proxy over HTTP 1.1 w keepalive.
     proxy_pass http://github_pages_backend;
