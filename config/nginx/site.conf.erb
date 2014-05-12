@@ -38,7 +38,7 @@ server {
   include <%= latest_release %>/config/nginx/ssl.conf;
 
   # Route the docs and other static pages to the github pages.
-  location ~* ^/(about|community|doc|docs|images|static|)(/|$) {
+  location ~* ^/(about|community|doc|docs|images|static|signup|)(/|$) {
     rewrite ^/doc(/|$) /docs/ permanent;
 
     # Old page redirects.
@@ -51,7 +51,7 @@ server {
   }
 
   # Route the dynamic portions of the site to the Rails web app.
-  location ~* ^/(account|admin|admins|assets|contact|favicon\.ico|javascripts|robots.txt|signup)(/|$) {
+  location ~* ^/(account|admin|admins|assets|contact|favicon\.ico|javascripts|robots.txt)(/|$) {
     proxy_pass http://api_umbrella_web_backend;
   }
 
