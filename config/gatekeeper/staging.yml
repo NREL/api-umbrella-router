@@ -8,3 +8,7 @@ apiUmbrella:
         port: 9200
   proxy:
     workers: 4
+  router_global_rate_limits:
+    ip_rate: "10000r/s"
+    ip_burst: 10000
+    ip_connections: 10000
