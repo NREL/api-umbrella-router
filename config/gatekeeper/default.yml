@@ -1,7 +1,6 @@
 apiUmbrella:
   proxy: 
     port: 50000
-    target: "localhost:50100"
   geoipDataDir: "/opt/geoip-lite/data"
   accountSignupUri: "http://api.data.gov/"
   contactUri: "http://api.data.gov/contact"
