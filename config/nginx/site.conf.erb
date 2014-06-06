@@ -1,5 +1,3 @@
-include <%= latest_release %>/config/nginx/ssl_terminator.conf;
-
 upstream github_pages_backend {
   server nrel.github.io:80;
   keepalive 10;
@@ -32,7 +30,16 @@ include <%= current_path %>/config/gatekeeper/nginx*.conf;
 # the web content.
 server {
   listen 80;
+  listen 443 ssl;
   server_name <%= all_domains.join(" ") %>;
+
+  <% case rails_env %>
+  <% when "development" %>
+    <% if(base_domain =~ /vagrant/) %>
+      ssl_certificate /etc/ssl/certs/vagrant.crt;
+      ssl_certificate_key /etc/ssl/certs/vagrant.key;
+    <% end %>
+  <% end %>
 
   include <%= latest_release %>/config/nginx/public_defaults.conf;
   include <%= latest_release %>/config/nginx/ssl.conf;
