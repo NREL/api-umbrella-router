@@ -45,7 +45,7 @@ server {
   include <%= latest_release %>/config/nginx/ssl.conf;
 
   # Route the docs and other static pages to the github pages.
-  location ~* ^/(about|contact|doc|docs|images|static|signup|terms|)(/|$) {
+  location ~* ^/(about|contact|metrics|doc|docs|images|static|signup|terms|)(/|$) {
     rewrite ^/doc(/|$) /docs/ permanent;
 
     # Old page redirects.
